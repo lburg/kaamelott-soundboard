@@ -11,6 +11,9 @@ define("app", function(require) {
     require("css!../../bower_components/ilyabirman-likely/release/likely.css");
 
     app = Marionette.Application.extend({
+        ui: {
+            oembedLink: "#oembed",
+        },
         initialize: function intialize() {
             this.addRegions({
                 mainRegion: "#main",
@@ -20,6 +23,9 @@ define("app", function(require) {
             Radio.channel("App").reply("region:show", this.showRegion.bind(this));
             Radio.channel("App").reply("modal:show", this.showModal.bind(this));
             Radio.channel("Sounds").on("sound:play", this.changeUrl.bind(this));
+
+            this.oembedRootURL = $(this.ui.oembedLink).attr("href");
+            $(this.ui.oembedLink).attr("href", this.oembedRootURL+encodeURIComponent(window.location));
 
             this.router = new Marionette.AppRouter();
 
@@ -44,6 +50,7 @@ define("app", function(require) {
 
         changeUrl: function(slug) {
             this.router.navigate("son/"+slug);
+            //$(this.ui.oembedLink).attr("href", this.oembedRootURL+encodeURIComponent(window.location));
         },
 
         showRegion: function showRegion(params) {
